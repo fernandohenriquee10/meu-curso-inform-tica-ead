@@ -23,6 +23,7 @@
         --cor-icone: #00008B;
         --cor-sucesso: #22c55e;
         --cor-erro: #ef4444;
+        --cor-aviso: #f59e0b; /* Amarelo/Laranja para alertas */
         --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
     }
 
@@ -39,6 +40,7 @@
         --cor-icone: #0d6efd;
         --cor-sucesso: #22c55e;
         --cor-erro: #ef4444;
+        --cor-aviso: #d97706;
         --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
     }
 
@@ -159,6 +161,10 @@
         cursor: pointer;
         border: none;
         font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
     .botao-primario {
         background-color: var(--cor-primaria);
@@ -168,12 +174,21 @@
     .botao-primario:hover {
         background-color: var(--cor-primaria-hover);
     }
+    /* Botões de Ação da Conta */
+    .botao-aviso {
+        background-color: var(--cor-aviso);
+        color: white;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    .botao-aviso:hover {
+        filter: brightness(0.9);
+    }
     .botao-perigo {
         background-color: var(--cor-erro);
         color: white;
         width: 100%;
-        margin-top: 1rem;
-        display: none; /* Escondido por padrão */
+        margin-top: 0.5rem;
     }
     .botao-perigo:hover {
          background-color: #c13e3e;
@@ -840,6 +855,33 @@
          background-color: var(--cor-fundo);
     }
 
+    /* Configurações - Seção de Perigo */
+    .settings-section {
+        margin-top: 2.5rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--cor-borda);
+    }
+    .settings-section h2 {
+        text-align: left;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--cor-texto-primario);
+    }
+    .danger-zone {
+        background-color: rgba(239, 68, 68, 0.05); /* Vermelho sutil */
+        border: 1px solid var(--cor-erro);
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+    .dark-mode .danger-zone {
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+    .danger-zone h3 {
+        color: var(--cor-erro);
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+    }
+
     /* Estilos do Quiz */
     #quiz-intro h2, #quiz-results h2 {
         text-align: center;
@@ -1384,6 +1426,21 @@
           </div>
           <button type="submit" class="botao botao-primario">Salvar Alterações</button>
         </form>
+
+        <div class="settings-section">
+          <h2>Gerenciamento de Conta</h2>
+          <div class="danger-zone">
+            <h3>Zona de Perigo</h3>
+            <p>Cuidado com as ações abaixo.</p>
+
+            <button class="botao botao-aviso" onclick="handleDeactivateAccount()">Desativar Conta</button>
+            <p style="font-size: 0.8rem; margin-top: 0.2rem;">Sua conta ficará oculta temporariamente. Seus dados serão mantidos.</p>
+
+            <button class="botao botao-perigo" onclick="handleDeleteAccount()">Excluir Conta</button>
+            <p style="font-size: 0.8rem; margin-top: 0.2rem;">Exclui permanentemente seu nome, foto e todo o progresso. Você poderá recriar a conta com o mesmo e-mail, mas começará do zero.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -1495,45 +1552,41 @@
 
 
 <script>
-  // === [ATUALIZADO] BANCO DE DADOS DAS AULAS (COM AULAS 0) ===
+  // === [ATUALIZADO] BANCO DE DADOS DAS AULAS (AGORA COM 5 AULAS POR MÓDULO) ===
   const moduleDatabase = {
       'informatica': {
           title: "Introdução à Informática",
           description: "Conceitos básicos, história da informática e importância da tecnologia na sociedade moderna.",
           lessons: [
-              { id: 'info_1', title: 'A História dos Computadores',
+              { id: 'info_1', title: 'Aula 1: A História dos Computadores',
                 content: `<h4>Teoria: A Evolução</h4>
-                          <p>A história da informática é fascinante e começa muito antes dos computadores eletrônicos. Podemos traçar suas raízes até ferramentas antigas de contagem, como o <strong>Ábaco</strong>, usado há milhares de anos.</p>
-                          <p>O primeiro conceito de um computador programável veio de <strong>Charles Babbage</strong>, no século XIX, com sua "Máquina Analítica", embora ela nunca tenha sido construída em sua época. Ada Lovelace, sua colaboradora, é considerada a primeira programadora da história por escrever algoritmos para essa máquina.</p>
-                          <p>O grande salto ocorreu no século XX. O <strong>ENIAC</strong> (1945) é frequentemente citado como o primeiro computador eletrônico digital de grande escala. Ele era gigantesco, pesava toneladas e usava válvulas a vácuo.</p>
-                          <p>A invenção do <strong>transistor</strong> (1947) e, posteriormente, do <strong>circuito integrado</strong> (microchip), permitiu que os computadores se tornassem menores, mais rápidos e mais baratos, levando à revolução dos computadores pessoais (PCs) nos anos 70 e 80, com empresas como Apple e IBM.</p>
-                          <h4>Prática: Linha do Tempo</h4>
-                          <p>Tente criar uma pequena linha do tempo no seu caderno ou em um editor de texto (como o Bloco de Notas) com estes 5 eventos principais:</p>
-                          <ul>
-                              <li>Ábaco (Antiguidade)</li>
-                              <li>Máquina Analítica de Babbage (Século XIX)</li>
-                              <li>ENIAC (1945)</li>
-                              <li>Invenção do Transistor (1947)</li>
-                              <li>Lançamento do Apple I (1976)</li>
-                          </ul>`
+                          <p>A história da informática começa muito antes dos computadores eletrônicos, com ferramentas como o <strong>Ábaco</strong>.</p>
+                          <p>O grande salto ocorreu com o <strong>ENIAC</strong> (1945) e depois com a invenção do <strong>transistor</strong> (1947) e do microchip, que permitiram a criação dos computadores pessoais (PCs).</p>`
               },
-              { id: 'info_2', title: 'O que é um Computador?',
+              { id: 'info_2', title: 'Aula 2: O que é um Computador?',
                 content: `<h4>Teoria: Entrada, Processamento e Saída</h4>
-                          <p>Um computador, de forma simples, é uma máquina que processa dados. Ele funciona com base em três etapas fundamentais:</p>
-                          <ol>
-                              <li><strong>Entrada:</strong> Você fornece dados ao computador. Ex: digitar em um teclado, clicar com o mouse, falar em um microfone.</li>
-                              <li><strong>Processamento:</strong> A "cabeça" do computador, chamada <strong>CPU (Unidade Central de Processamento)</strong>, pega esses dados e realiza cálculos ou execuções com base em instruções (programas).</li>
-                              <li><strong>Saída:</strong> O computador mostra o resultado do processamento. Ex: exibir uma imagem no monitor, imprimir um documento, tocar um som.</li>
-                          </ol>
-                          <p>Tudo o que você faz, desde navegar na internet até jogar, segue esse fluxo.</p>
-                          <h4>Prática: Identificando o Fluxo</h4>
-                          <p>Pense nesta tarefa: "Você quer ouvir uma música no seu computador."</p>
-                          <ul>
-                              <li><strong>Entrada:</strong> Qual foi a sua ação de entrada? (R: Clicar duas vezes no arquivo da música).</li>
-                              <li><strong>Processamento:</strong> O que o computador fez? (R: A CPU abriu o programa de música, leu o arquivo e o decodificou).</li>
-                              <li><strong>Saída:</strong> Qual foi o resultado? (R: O som saindo das caixas de som).</li>
-                          </ul>`
+                          <p>Um computador processa dados em três etapas: <strong>Entrada</strong> (teclado/mouse), <strong>Processamento</strong> (CPU) e <strong>Saída</strong> (monitor/impressora).</p>`
               },
+              // [NOVA]
+              { id: 'info_3', title: 'Aula 3: Ligando e Entrando no Computador',
+                content: `<h4>Teoria: O Processo de Boot</h4>
+                          <p>Para "entrar" no computador, primeiro pressionamos o botão <strong>Power</strong>. O computador inicia um processo chamado "Boot", onde ele verifica as peças e carrega o sistema operacional.</p>
+                          <p>Na tela de login, você deve selecionar seu usuário e digitar sua senha (se houver). É a sua chave de segurança para acessar seus arquivos.</p>
+                          <h4>Prática:</h4>
+                          <p>Localize o botão de ligar do seu computador (geralmente tem um símbolo de um círculo cortado por um traço).</p>`
+              },
+              // [NOVA]
+              { id: 'info_4', title: 'Aula 4: Dominando Mouse e Teclado',
+                content: `<h4>Teoria: Interação Básica</h4>
+                          <p>O <strong>Mouse</strong> controla a seta (cursor). O botão esquerdo seleciona/abre, o direito abre menus de opções.</p>
+                          <p>O <strong>Teclado</strong> é para inserir texto. Teclas importantes: <em>Enter</em> (confirma), <em>Backspace</em> (apaga), <em>Shift</em> (maiúsculas temporárias) e <em>Caps Lock</em> (maiúsculas fixas).</p>`
+              },
+              // [NOVA]
+              { id: 'info_5', title: 'Aula 5: A Área de Trabalho',
+                content: `<h4>Teoria: Sua Mesa Virtual</h4>
+                          <p>Ao entrar no sistema, você vê a "Área de Trabalho" (Desktop). É como uma mesa real. Os ícones são como papéis ou pastas sobre a mesa.</p>
+                          <p>A barra inferior (Barra de Tarefas) mostra o que está aberto e o Menu Iniciar (no Windows) é onde você encontra todos os programas.</p>`
+              }
           ]
       },
       'hardware': {
@@ -1541,299 +1594,120 @@
           description: "Componentes físicos (hardware) e programas que o fazem funcionar (software).",
           lessons: [
               { id: 'hw_1', title: 'Aula 1: O que é Hardware?',
-                content: `<h4>Teoria: As Peças Físicas</h4>
-                          <p><strong>Hardware</strong> é qualquer parte física do computador que você pode tocar. São os componentes eletrônicos, placas e periféricos.</p>
-                          <p>Os principais componentes do hardware são:</p>
-                          <ul>
-                              <li><strong>Placa-Mãe:</strong> A "espinha dorsal" onde tudo se conecta.</li>
-                              <li><strong>CPU (Processador):</strong> O "cérebro" que executa todas as tarefas.</li>
-                              <li><strong>Memória RAM:</strong> A "mesa de trabalho" do computador. Armazena temporariamente o que está em uso. É volátil (apaga quando o computador desliga).</li>
-                              <li><strong>Armazenamento (HD ou SSD):</strong> O "armário" onde seus arquivos (fotos, documentos, sistema) são guardados permanentemente.</li>
-                              <li><strong>Placa de Vídeo (GPU):</strong> Especializada em processar gráficos (jogos, vídeos).</li>
-                              <li><strong>Periféricos:</strong> Dispositivos de entrada (teclado, mouse) e saída (monitor, impressora).</li>
-                          </ul>
-                          <h4>Prática: O Hardware do seu dia-a-dia</h4>
-                          <p>Olhe para o seu smartphone. Ele também é um computador! Tente identificar o hardware:</p>
-                          <ul>
-                              <li><strong>Periférico de Entrada:</strong> A tela de toque (touchscreen).</li>
-                              <li><strong>Periférico de Saída:</strong> A própria tela (display) e o alto-falante.</li>
-                              <li><strong>Hardware Interno (que você não vê):</strong> Processador (CPU), Memória RAM e Armazenamento (onde suas fotos estão salvas).</li>
-                          </ul>`
+                content: `<h4>Teoria: As Peças Físicas</h4><p>Hardware é tudo que você toca: Monitor, Teclado, CPU, Memória RAM.</p>`
               },
               { id: 'hw_2', title: 'Aula 2: O que é Software?',
-                content: `<h4>Teoria: As Instruções</h4>
-                          <p><strong>Software</strong> é o conjunto de instruções (programas) que dizem ao hardware o que fazer. Você não pode tocar no software.</p>
-                          <p>Existem dois tipos principais de software:</p>
-                          <ol>
-                              <li><strong>Software de Sistema (Sistema Operacional):</strong> É o software mais importante. Ele gerencia todo o hardware e permite que outros programas funcionem. Exemplos: <strong>Windows, macOS, Linux, Android, iOS.</strong></li>
-                              <li><strong>Software de Aplicativo (Programas):</strong> São os programas que usamos para realizar tarefas específicas. Exemplos: <strong>Navegador de internet (Chrome), Editor de texto (Word), Planilha (Excel), Jogos.</strong></li>
-                          </ol>
-                          <p>Sem o software (o Sistema Operacional), o hardware (o seu computador ou celular) seria apenas uma caixa de metal e plástico inútil.</p>
-                          <h4>Prática: Classificando Softwares</h4>
-                          <p>Abra seu computador ou celular. Liste 3 aplicativos que você mais usa. Eles são "Software de Sistema" ou "Software de Aplicativo"?</p>
-                          <p>(R: Todos são Softwares de Aplicativo. O Sistema Operacional é o que permite que você os instale e abra!)</p>`
+                content: `<h4>Teoria: As Instruções</h4><p>Software são os programas (Windows, Word, Jogos). Eles dizem ao hardware o que fazer.</p>`
               },
+              { id: 'hw_3', title: 'Aula 3: Dispositivos de Entrada e Saída',
+                content: `<h4>Teoria: Conversando com a Máquina</h4><p>Entrada: Teclado, Mouse, Microfone. Saída: Monitor, Impressora, Caixas de Som.</p>`
+              },
+              { id: 'hw_4', title: 'Aula 4: Armazenamento: HD vs SSD',
+                content: `<h4>Teoria: Onde guardamos tudo</h4><p>O HD (Disco Rígido) é mais antigo e lento. O SSD (Unidade de Estado Sólido) é moderno e muito mais rápido. Trocar um HD por um SSD deixa o computador muito mais veloz.</p>`
+              },
+              { id: 'hw_5', title: 'Aula 5: Portas e Conexões',
+                content: `<h4>Teoria: Conectando Coisas</h4><p><strong>USB:</strong> A porta universal para pendrives e mouse. <strong>HDMI:</strong> Para transmitir vídeo e som para a TV. <strong>P2:</strong> Para fones de ouvido.</p>`
+              }
           ]
       },
       'os': {
           title: "Sistemas Operacionais",
           description: "Funcionamento e uso de sistemas como Windows, macOS e Linux.",
           lessons: [
-              { id: 'os_1', title: 'Aula 1: A História e Função do S.O.',
-                content: `<h4>Teoria: O Gerente do Computador</h4>
-                          <p>O <strong>Sistema Operacional (S.O.)</strong> é o software que "acorda" o computador e faz a ponte entre você (usuário) e o hardware (peças).</p>
-                          <p><strong>História:</strong> Nos primórdios da computação (anos 50-60), não existia S.O. como conhecemos. Os programadores tinham que inserir instruções manualmente, uma tarefa complexa. Os primeiros S.O. foram criados para gerenciar tarefas em lote (batch processing).</p>
-                          <p>A grande revolução veio com o <strong>UNIX</strong> (anos 70), que introduziu muitos conceitos usados até hoje. Dele, nasceram o <strong>Linux</strong> (criado por Linus Torvalds em 1991, é de código aberto) e o <strong>macOS</strong> (da Apple, conhecido por sua estabilidade e design).</p>
-                          <p>O <strong>Windows</strong> (da Microsoft) surgiu nos anos 80 (inicialmente como uma interface gráfica para o MS-DOS) e se tornou o sistema mais popular em computadores pessoais no mundo devido à sua facilidade de uso e compatibilidade.</p>
-                          <h4>Funções Principais:</h4>
-                          <ul>
-                              <li><strong>Gerenciamento de Hardware:</strong> Controla o acesso à CPU, memória, discos, etc.</li>
-                              <li><strong>Interface com o Usuário:</strong> O que você vê (a "Área de Trabalho", ícones, janelas).</li>
-                              <li><strong>Gerenciamento de Arquivos:</strong> Organiza seus dados em pastas e arquivos.</li>
-                          </ul>
-                          <h4>Prática: Explorando seu S.O.</h4>
-                          <p>Qual S.O. você está usando agora? (Windows, macOS, Linux, Android ou iOS?).</p>
-                          <p>Tente encontrar o "Gerenciador de Tarefas" (no Windows, Ctrl+Shift+Esc) ou "Monitor de Atividade" (no macOS). Veja a lista de softwares (processos) que seu S.O. está gerenciando neste exato momento!</p>`
-              },
+              { id: 'os_1', title: 'Aula 1: O Gerente do Computador', content: `<p>O Sistema Operacional (S.O.) gerencia o hardware e software.</p>` },
+              { id: 'os_2', title: 'Aula 2: Windows (Microsoft)', content: `<p>O mais usado no mundo. Famoso pelo Menu Iniciar e compatibilidade.</p>` },
+              { id: 'os_3', title: 'Aula 3: macOS (Apple)', content: `<p>Exclusivo dos computadores Mac. Conhecido pelo design elegante e segurança.</p>` },
+              { id: 'os_4', title: 'Aula 4: Linux (Código Aberto)', content: `<p>Um sistema livre e gratuito. Muito usado em servidores e por programadores.</p>` },
+              { id: 'os_5', title: 'Aula 5: Gerenciando Arquivos', content: `<p>Aprenda a criar Pastas para organizar seus arquivos, assim como gavetas em um arquivo físico.</p>` }
           ]
       },
       'redes': {
           title: "Internet e Redes",
           description: "Navegação na web, uso de navegadores, e-mail, redes sociais e segurança online.",
           lessons: [
-              { id: 'net_1', title: 'Aula 1: O que é a Internet?',
-                content: `<h4>Teoria: A Rede das Redes</h4>
-                          <p>Muitas pessoas confundem "Internet" com "Web" (WWW). Elas não são a mesma coisa!</p>
-                          <p>A <strong>Internet</strong> é a infraestrutura física global: um conjunto gigantesco de cabos (muitos deles submarinos, ligando continentes), roteadores e servidores interconectados. É a "estrada".</p>
-                          <p>A <strong>World Wide Web (WWW)</strong> é um *serviço* que roda sobre a infraestrutura da Internet. É o conjunto de sites, páginas e links que acessamos através de um navegador. A Web é apenas *uma* das coisas que usa a Internet (o E-mail, o WhatsApp e os jogos online também usam).</p>
-                          <p><strong>Como funciona?</strong> Quando você digita um site (ex: google.com), seu computador pergunta a um "servidor DNS" (a "lista telefônica" da internet) qual o endereço IP (um número, ex: 172.217.14.228) daquele site. Seu computador então envia um pacote de dados (um "pedido") por essa rede de cabos até o servidor do Google, que responde enviando os dados da página de volta para você.</p>
-                          <h4>Prática: O Navegador</h4>
-                          <p>O <strong>Navegador</strong> (Browser) é o software aplicativo que usamos para acessar a Web (WWW). Exemplos: Google Chrome, Mozilla Firefox, Safari (Apple), Microsoft Edge.</p>
-                          <p>Abra seu navegador e explore:</p>
-                          <ul>
-                              <li><strong>Barra de Endereços:</strong> Onde você digita o "URL" (o endereço do site).</li>
-                              <li><strong>Favoritos:</strong> Salve os sites que você mais usa.</li>
-                              <li><strong>Abas (Guias):</strong> Permite abrir vários sites ao mesmo tempo.</li>
-                          </ul>`
-              },
+              { id: 'net_1', title: 'Aula 1: Internet vs Web', content: `<p>Internet é a rede de cabos. Web são os sites que acessamos nela.</p>` },
+              { id: 'net_2', title: 'Aula 2: O que é Wi-Fi?', content: `<p>É a tecnologia que permite conectar à internet sem fios, usando ondas de rádio.</p>` },
+              { id: 'net_3', title: 'Aula 3: E-mail Profissional', content: `<p>Como escrever e responder e-mails de forma segura e profissional.</p>` },
+              { id: 'net_4', title: 'Aula 4: Segurança Online', content: `<p>Crie senhas fortes e não clique em links suspeitos (Phishing).</p>` },
+              { id: 'net_5', title: 'Aula 5: A Nuvem (Cloud)', content: `<p>Guardar arquivos "na nuvem" (Google Drive, OneDrive) significa salvá-los em servidores na internet para acessar de qualquer lugar.</p>` }
           ]
       },
       'escritorio': {
           title: "Aplicativos de Escritório",
           description: "Uso de programas como Microsoft Word, Excel e PowerPoint para tarefas do dia a dia.",
           lessons: [
-              { id: 'app_1', title: 'Aula 1: Microsoft Word (Editor de Texto)',
-                content: `<h4>Teoria: O Processador de Texto</h4>
-                          <p>O Microsoft Word (ou seus equivalentes gratuitos, como o Google Docs) é um software aplicativo focado na criação e edição de documentos de texto. Ele substituiu a antiga máquina de escrever com vantagens imensas.</p>
-                          <p><strong>História:</strong> Lançado em 1983, o Word se tornou o padrão mundial para documentos. Sua principal função é formatar texto (mudar fonte, tamanho, cor) e organizar páginas (parágrafos, margens, cabeçalhos).</p>
-                          <h4>Prática: Formatando seu Primeiro Documento</h4>
-                          <p>Abra o Word (ou Google Docs) e siga estes passos:</p>
-                          <ol>
-                              <li>Digite seu nome completo.</li>
-                              <li>Selecione seu nome com o mouse.</li>
-                              <li>No menu superior, encontre a "Fonte" (ex: Arial, Times New Roman) e mude-a.</li>
-                              <li>Ao lado, mude o "Tamanho" da fonte (ex: para 16).</li>
-                              <li>Clique nos botões <strong>N</strong> (Negrito), <em>I</em> (Itálico) e <u>S</u> (Sublinhado).</li>
-                              <li>Tente centralizar seu nome na página (procure os ícones de alinhamento).</li>
-                          </ol>
-                          <p>Parabéns, você acabou de formatar um texto!</p>`
-              },
-              { id: 'app_2', title: 'Aula 2: Microsoft Excel (Planilhas)',
-                content: `<h4>Teoria: A Planilha Eletrônica</h4>
-                          <p>O Microsoft Excel (ou Google Sheets) é um software focado em cálculos e organização de dados em tabelas (planilhas).</p>
-                          <p>Sua estrutura é baseada em <strong>Células</strong> (os quadradinhos), organizadas em <strong>Linhas</strong> (números) e <strong>Colunas</strong> (letras). Cada célula tem um endereço (ex: A1, B2).</p>
-                          <p>O poder do Excel está nas <strong>Fórmulas</strong>. Em vez de somar 5 + 10 manualmente, você pode dizer ao Excel para somar o valor da célula A1 com o valor da célula A2. Se os valores mudarem, o resultado atualiza sozinho!</p>
-                          <h4>Prática: Sua Primeira Fórmula</h4>
-                          <p>Abra o Excel (ou Google Sheets):</p>
-                          <ol>
-                              <li>Na célula <strong>A1</strong>, digite o número <strong>10</strong>.</li>
-                              <li>Na célula <strong>A2</strong>, digite o número <strong>20</strong>.</li>
-                              <li>Na célula <strong>A3</strong>, digite exatamente isto: <strong>=A1+A2</strong> e aperte Enter.</li>
-                          </ol>
-                          <p>O Excel deve mostrar o resultado <strong>30</strong>. Agora, clique na célula A1, mude o valor para 50 e aperte Enter. Veja como o resultado na A3 muda automaticamente para 70. Isso é o poder das planilhas!</p>`
-              },
+              { id: 'app_1', title: 'Aula 1: Editor de Texto (Word)', content: `<p>Criar documentos, formatar fontes e parágrafos.</p>` },
+              { id: 'app_2', title: 'Aula 2: Planilhas (Excel)', content: `<p>Criar tabelas e fazer cálculos automáticos com fórmulas.</p>` },
+              { id: 'app_3', title: 'Aula 3: Apresentações (PowerPoint)', content: `<p>Criar slides visuais para apresentar ideias e projetos.</p>` },
+              { id: 'app_4', title: 'Aula 4: PDF e Formatos', content: `<p>A importância de salvar como PDF para que o documento não seja alterado.</p>` },
+              { id: 'app_5', title: 'Aula 5: Organização Digital', content: `<p>Como manter seus documentos digitais organizados por categorias.</p>` }
           ]
       },
       'android': {
           title: "Desenvolvimento Android",
           description: "Aprenda a criar aplicativos Android do básico ao avançado.",
           lessons: [
-              // [NOVA AULA 0]
-              { id: 'droid_0', title: 'Aula 0: Usando seu Celular Android',
-                content: `<h4>Teoria: Conhecendo seu Aparelho</h4>
-                          <p>Seja bem-vindo à alfabetização digital! O seu celular Android é um computador poderoso. Vamos aprender o básico.</p>
-                          <ul>
-                              <li><strong>Tela Inicial:</strong> Onde ficam seus aplicativos (apps) e widgets (como o relógio).</li>
-                              <li><strong>Botões de Navegação:</strong> Geralmente na parte de baixo. Uma seta (Voltar), um círculo (Home/Início) e um quadrado (Multitarefa, para ver apps abertos).</li>
-                              <li><strong>Barra de Status:</strong> No topo, mostra o sinal, o <strong>Wi-Fi (um símbolo de ondas)</strong> e a bateria.</li>
-                              <li><strong>Conectar ao Wi-Fi:</strong> Arraste o dedo de cima para baixo na tela, procure o símbolo de Wi-Fi, pressione e segure. Escolha sua rede e digite a senha.</li>
-                          </ul>
-                          <h4>Prática: Instalando um App</h4>
-                          <ol>
-                              <li>Procure o ícone da <strong>Google Play Store</strong> (uma "sacola" colorida). Este é o mercado oficial de aplicativos.</li>
-                              <li>Abra a Play Store e use a barra de busca no topo.</li>
-                              <li>Digite "Calculadora" e aperte "Buscar".</li>
-                              <li>Escolha um resultado (como "Calculadora do Google") e aperte o botão verde "Instalar".</li>
-                              <li>Após instalar, o app aparecerá na sua lista de aplicativos!</li>
-                          </ol>`
+              { id: 'droid_0', title: 'Aula 1: Primeiros Passos no Android',
+                content: `<h4>Teoria: Entrando no Sistema</h4>
+                          <p>Ao ligar um celular Android novo, você precisa "entrar" nele configurando uma <strong>Conta Google</strong> (Gmail). Isso conecta você à Play Store para baixar aplicativos.</p>
+                          <p>Para desbloquear a tela, geralmente usamos senha, desenho padrão ou impressão digital.</p>`
               },
-              { id: 'droid_1', title: 'Aula 1: O que é o Android?',
-                content: `<h4>Teoria: O Sistema do Google</h4>
-                          <p>O <strong>Android</strong> é um Sistema Operacional (Software de Sistema) baseado em Linux, projetado primariamente para dispositivos móveis (smartphones e tablets). Foi adquirido e é desenvolvido pelo Google.</p>
-                          <p>Sua principal característica é ser de <strong>Código Aberto</strong>. Isso significa que qualquer fabricante (Samsung, Motorola, Xiaomi, etc.) pode usar o Android em seus aparelhos, o que levou à sua dominância mundial em número de usuários.</p>
-                          <p>Para programar para Android, a linguagem oficial atualmente é o <strong>Kotlin</strong> (uma linguagem moderna que substituiu o Java, que foi a linguagem original por muitos anos). O ambiente de desenvolvimento (software onde se programa) é o <strong>Android Studio</strong>.</p>
-                          <h4>Prática: Conhecendo o Android Studio</h4>
-                          <p>Para esta aula, o objetivo é apenas instalar o ambiente:</p>
-                          <ol>
-                              <li>Pesquise no Google por "Android Studio" e faça o download no site oficial do Google.</li>
-                              <li>A instalação é longa, pois baixa muitos componentes (SDKs).</li>
-                              <li>Após instalar, tente criar um "Novo Projeto" (New Project).</li>
-                              <li>Escolha um modelo (template), como "Empty Activity".</li>
-                              <li>O objetivo é apenas ver a tela de código e clicar no botão "Play" (Run) para ver o <strong>Emulador</strong> (um celular virtual) abrir com um "Hello, World!".</li>
-                          </ol>`
-              },
+              { id: 'droid_1', title: 'Aula 2: A Interface Android', content: `<p>Botões de navegação (Voltar, Início, Apps Recentes) e a Barra de Notificações.</p>` },
+              { id: 'droid_2', title: 'Aula 3: Instalando Apps', content: `<p>Usando a Google Play Store para buscar e instalar novos programas de forma segura.</p>` },
+              { id: 'droid_3', title: 'Aula 4: Introdução ao Desenvolvimento', content: `<p>O Android usa a linguagem <strong>Kotlin</strong> e o programa Android Studio para criar apps.</p>` },
+              { id: 'droid_4', title: 'Aula 5: Criando seu Primeiro App', content: `<p>Conceito básico de criar uma tela com um botão e um texto no Android Studio.</p>` }
           ]
       },
       'ios': {
           title: "Desenvolvimento iOS",
           description: "Aprenda a criar aplicativos iOS do básico ao avançado.",
           lessons: [
-              // [NOVA AULA 0]
-              { id: 'ios_0', title: 'Aula 0: Usando seu iPhone',
-                content: `<h4>Teoria: Conhecendo seu Aparelho</h4>
-                          <p>Seja bem-vindo à alfabetização digital! O iPhone é conhecido por ser seguro e fácil de usar. Vamos aprender o básico.</p>
-                          <ul>
-                              <li><strong>Tela de Início:</strong> Onde ficam todos os seus aplicativos (apps). Deslize para a esquerda ou direita para ver mais.</li>
-                              <li><strong>Gestos:</strong> (Em iPhones modernos) Deslize de baixo para cima para voltar à Tela de Início. Deslize de baixo para cima e pare no meio para ver os apps abertos.</li>
-                              <li><strong>Central de Controle:</strong> Arraste o dedo do canto superior direito para baixo. Aqui você liga o <strong>Wi-Fi (símbolo de ondas)</strong>, ajusta o brilho e o volume.</li>
-                              <li><strong>Conectar ao Wi-Fi:</strong> Abra "Ajustes" (ícone de engrenagem), toque em "Wi-Fi", escolha sua rede e digite a senha.</li>
-                          </ul>
-                          <h4>Prática: Instalando um App</h4>
-                          <ol>
-                              <li>Procure o ícone da <strong>App Store</strong> (um "A" azul). Este é o mercado oficial de aplicativos da Apple.</li>
-                              <li>Abra a App Store e toque na aba "Buscar" (ícone de lupa) no canto inferior direito.</li>
-                              <li>Digite "Calculadora" e aperte "Buscar".</li>
-                              <li>Escolha um resultado e toque em "Obter". Pode ser necessário confirmar com sua senha ou rosto (Face ID).</li>
-                              <li>Após instalar, o app aparecerá na sua Tela de Início!</li>
-                          </ol>`
+              { id: 'ios_0', title: 'Aula 1: Primeiros Passos no iPhone',
+                content: `<h4>Teoria: Entrando no Sistema</h4>
+                          <p>Para usar um iPhone, você cria um <strong>Apple ID</strong>. Ele sincroniza tudo com o iCloud.</p>
+                          <p>Para entrar (desbloquear), usamos o Face ID (rosto) ou Touch ID (dedo) e uma senha numérica.</p>`
               },
-              { id: 'ios_1', title: 'Aula 1: O que é o iOS?',
-                content: `<h4>Teoria: O Sistema da Apple</h4>
-                          <p>O <strong>iOS</strong> é o Sistema Operacional (Software de Sistema) desenvolvido pela Apple exclusivamente para seus próprios dispositivos: o iPhone (e dele deriva o iPadOS para o iPad).</p>
-                          <p>Diferente do Android, o iOS é um sistema <strong>Fechado</strong>. A Apple controla 100% do hardware (o iPhone) e do software (o iOS), garantindo uma integração e performance que muitos consideram superior.</p>
-                          <p>Para programar para iOS, a linguagem oficial é o <strong>Swift</strong> (uma linguagem moderna e segura criada pela Apple, que substituiu o antigo Objective-C). O ambiente de desenvolvimento é o <strong>Xcode</strong>.</p>
-                          <p><strong>Importante:</strong> Só é possível desenvolver para iOS (usando o Xcode) em um computador com <strong>macOS</strong> (um Mac).</p>
-                          <h4>Prática: Conhecendo o Xcode</h4>
-                          <p>Se você possui um Mac:</p>
-                          <ol>
-                              <li>Baixe o <strong>Xcode</strong> gratuitamente na App Store.</li>
-                              <li>Abra o Xcode e crie um "Novo Projeto" (New Project).</li>
-                              <li>Escolha um modelo (template) para "iOS" -> "App".</li>
-                              <li>Escolha a interface "SwiftUI" (a mais moderna).</li>
-                              <li>Clique no botão "Play" (Run) para ver o <strong>Simulador</strong> (um iPhone virtual) abrir com seu aplicativo "Hello, World!".</li>
-                          </ol>`
-              },
-              { id: 'ios_2', title: 'Aula 2: Introdução ao SwiftUI',
-                content: `<h4>Teoria: Construindo Interfaces</h4>
-                          <p>O <strong>SwiftUI</strong> é a forma mais moderna de construir a interface (as telas) do seu aplicativo Apple. Ele usa uma abordagem <strong>declarativa</strong>.</p>
-                          <p>Em vez de dizer "Passo 1: crie um botão; Passo 2: mude a cor do botão; Passo 3: posicione o botão", você apenas *declara* o que quer na tela:</p>
-                          <p><code>Text("Olá, Fê!")</code><br>
-                             <code>  .font(.largeTitle)</code><br>
-                             <code>  .background(Color.blue)</code></css>
-                          </p>
-                          <p>Isso diz "Eu quero um texto 'Olá, Fê!' com fonte grande e fundo azul". O SwiftUI cuida de como fazer isso.</p>
-                          <h4>Prática: Modificando o Texto</h4>
-                          <p>Abra o projeto "Hello, World!" que você criou na Aula 1 (o arquivo <code>ContentView.swift</code>):</p>
-                          <ol>
-                              <li>Encontre onde está escrito <code>Text("Hello, world!")</code>.</li>
-                              <li>Mude o texto para <code>Text("Meu primeiro App!")</code>.</li>
-                              <li>Logo abaixo dessa linha, adicione uma nova linha: <code>.foregroundColor(.red)</code></li>
-                              <li>Rode o Simulador (Play) e veja seu texto vermelho na tela!</li>
-                          </ol>`
-              },
+              { id: 'ios_1', title: 'Aula 2: O Sistema iOS', content: `<p>Conhecido por ser fechado e seguro. A navegação em modelos novos é feita por gestos (deslizar).</p>` },
+              { id: 'ios_2', title: 'Aula 3: App Store', content: `<p>A única forma oficial de instalar apps no iPhone, garantindo segurança máxima.</p>` },
+              { id: 'ios_3', title: 'Aula 4: Intro ao Desenvolvimento iOS', content: `<p>Apps para iPhone são feitos em computadores Mac usando a linguagem <strong>Swift</strong>.</p>` },
+              { id: 'ios_4', title: 'Aula 5: SwiftUI Básico', content: `<p>Como usar código simples para desenhar botões e textos na tela do iPhone.</p>` }
           ]
       },
   };
 
-  // === [ATUALIZADO] BANCO DE DADOS DA PROVA FINAL (14 PERGUNTAS) ===
+  // === [ATUALIZADO] BANCO DE DADOS DA PROVA FINAL (20 PERGUNTAS) ===
   const quizDatabase = [
       // Informática Básica
-      {
-          question: "Qual componente é considerado o 'cérebro' do computador?",
-          options: ["Memória RAM", "Placa-Mãe", "CPU (Processador)", "SSD"],
-          correct: 2
-      },
-      {
-          question: "O que é 'Software'?",
-          options: ["Qualquer parte física que você pode tocar", "Programas e instruções que rodam no computador", "O monitor e o teclado", "Cabos de rede"],
-          correct: 1
-      },
+      { question: "Qual componente é considerado o 'cérebro' do computador?", options: ["Memória RAM", "Placa-Mãe", "CPU (Processador)", "SSD"], correct: 2 },
+      { question: "O que é 'Software'?", options: ["Parte física", "Programas e instruções", "O monitor", "Cabos"], correct: 1 },
+      { question: "O que acontece durante o 'Boot'?", options: ["O computador desliga", "O sistema operacional é carregado", "A internet cai", "O mouse trava"], correct: 1 },
+      { question: "Qual tecla confirma uma ação?", options: ["Esc", "Shift", "Enter", "Ctrl"], correct: 2 },
+
       // OS
-      {
-          question: "Qual destes é um Sistema Operacional de Código Aberto?",
-          options: ["Windows 11", "macOS Sonoma", "iOS 17", "Linux (Ubuntu)"],
-          correct: 3
-      },
+      { question: "Qual destes é Código Aberto?", options: ["Windows", "macOS", "iOS", "Linux"], correct: 3 },
+      { question: "O que é a Área de Trabalho?", options: ["A mesa física", "A tela inicial do sistema", "O teclado", "A lixeira"], correct: 1 },
+
       // Redes
-      {
-          question: "O que significa 'WWW' na internet?",
-          options: ["World Wide Web", "Windows Web Wifi", "World Web Wires", "Nenhuma das anteriores"],
-          correct: 0
-      },
+      { question: "O que significa 'WWW'?", options: ["World Wide Web", "Windows Web Wifi", "World Web Wires", "Nada"], correct: 0 },
+      { question: "O que é 'Nuvem' (Cloud)?", options: ["Chuva digital", "Servidores na internet para guardar dados", "Um tipo de vírus", "O monitor"], correct: 1 },
+
       // Escritório
-      {
-          question: "Para que serve o Microsoft Excel?",
-          options: ["Escrever cartas e documentos de texto", "Criar apresentações de slides", "Navegar na internet", "Criar planilhas e cálculos"],
-          correct: 3
-      },
-      {
-          question: "Qual atalho de teclado é usado para 'Salvar' um documento?",
-          options: ["Ctrl + C", "Ctrl + P", "Ctrl + S", "Ctrl + V"],
-          correct: 2
-      },
-      {
-          question: "Como toda fórmula no Excel deve começar?",
-          options: ["Com o sinal de (*)", "Com o sinal de (=)", "Com o nome da célula", "Com 'SOMA'"],
-          correct: 1
-      },
-      // Mobile
-      {
-          question: "Qual é a linguagem de programação moderna e oficial para Android?",
-          options: ["Java", "Swift", "Kotlin", "C#"],
-          correct: 2
-      },
-      {
-          question: "Qual empresa desenvolve o sistema operacional iOS?",
-          options: ["Google", "Microsoft", "Samsung", "Apple"],
-          correct: 3
-      },
+      { question: "Para que serve o Excel?", options: ["Texto", "Slides", "Navegar", "Planilhas e cálculos"], correct: 3 },
+      { question: "Qual formato preserva o documento?", options: ["DOCX", "TXT", "PDF", "PPT"], correct: 2 },
+      { question: "Atalho para Salvar?", options: ["Ctrl+C", "Ctrl+P", "Ctrl+S", "Ctrl+V"], correct: 2 },
+
+      // Mobile (Android/iOS)
+      { question: "Linguagem oficial do Android?", options: ["Java", "Swift", "Kotlin", "C#"], correct: 2 },
+      { question: "Empresa do iOS?", options: ["Google", "Microsoft", "Samsung", "Apple"], correct: 3 },
+      { question: "O que é necessário para usar a Play Store?", options: ["Conta Microsoft", "Conta Google", "Apple ID", "CPF"], correct: 1 },
+      { question: "Qual a loja de apps do iPhone?", options: ["Google Play", "App Store", "Galaxy Store", "Windows Store"], correct: 1 },
+
       // Hardware
-      {
-          question: "O que é um 'SSD'?",
-          options: ["Um tipo de impressora rápida", "Um Sistema Operacional", "Um dispositivo de armazenamento (disco) rápido", "Um processador gráfico"],
-          correct: 2
-      },
-      // [NOVAS] Alfabetização Digital
-      {
-          question: "Qual símbolo representa a conexão Wi-Fi no celular?",
-          options: ["Um ícone de avião", "Um ícone de 'B' (Bluetooth)", "Um ícone de ondas", "Um ícone de engrenagem"],
-          correct: 2
-      },
-      {
-          question: "O que é a 'App Store' (iOS) ou 'Play Store' (Android)?",
-          options: ["Uma loja para comprar comida", "Onde se instala novos aplicativos (apps)", "A pasta de fotos", "O navegador de internet"],
-          correct: 1
-      },
-      {
-          question: "Para que serve a 'Memória RAM' em um computador ou celular?",
-          options: ["Armazenar fotos permanentemente", "Armazenar temporariamente o que está em uso (apps abertos)", "Para fazer ligações", "Aumentar o brilho da tela"],
-          correct: 1
-      },
-      {
-          question: "O que significa 'Hardware'?",
-          options: ["As peças físicas (tela, bateria, processador)", "Os programas (WhatsApp, Instagram)", "A internet", "A senha do Wi-Fi"],
-          correct: 0
-      }
+      { question: "O que é um SSD?", options: ["Impressora", "Sistema", "Armazenamento rápido", "Vídeo"], correct: 2 },
+      { question: "Qual porta conecta pen-drives?", options: ["HDMI", "VGA", "USB", "P2"], correct: 2 },
+      { question: "O mouse é um dispositivo de...?", options: ["Entrada", "Saída", "Processamento", "Armazenamento"], correct: 0 },
+      { question: "Para que serve a RAM?", options: ["Salvar fotos para sempre", "Memória temporária de uso", "Ligar o PC", "Imprimir"], correct: 1 },
+      { question: "Qual símbolo representa Wi-Fi?", options: ["Avião", "B", "Ondas", "Engrenagem"], correct: 2 }
   ];
 
   // === Lógica do Tema ===
@@ -1871,7 +1745,7 @@
       }
   }
 
-  // === [ATUALIZADO] Lógica de Navegação e Estado ===
+  // === Lógica de Navegação e Estado ===
   let isLoggedIn = false;
   let lessonCompletionState = {};
   let totalAllLessons = 0;
@@ -1923,7 +1797,6 @@
   function showSettingsPage(event) { if(event) event.preventDefault(); showPage('settings'); }
   function showCertificateFormPage(event) { if(event) event.preventDefault(); showPage('certificate'); }
 
-  // [NOVO] Lógica para clicar no Logo
   function handleLogoClick(event) {
       if (isLoggedIn) {
           showDashboard(event);
@@ -1935,22 +1808,19 @@
   function showQuizPage(event) {
       if(event) event.preventDefault();
 
-      // [NOVA REGRA] Bloqueia a prova se o progresso não for 100%
       if (generalProgressPercent < 100 && quizStatus !== "passed") {
           alert("Seu progresso geral ainda não está em 100%. Por favor, conclua todas as aulas de todos os módulos antes de fazer a prova final. Continue estudando!");
-          return; // Para a execução
+          return;
       }
 
-      // Lógica para continuar a prova
       if(quizInProgress) {
           showPage('quiz');
           document.getElementById('quiz-intro').style.display = 'none';
           document.getElementById('quiz-results').style.display = 'none';
           document.getElementById('quiz-main').style.display = 'block';
-          return; // Sai da função para não recarregar a intro
+          return;
       }
 
-      // Mostra a introdução da prova
       document.getElementById('quiz-intro').style.display = 'block';
       document.getElementById('quiz-results').style.display = 'none';
       document.getElementById('quiz-main').style.display = 'none';
@@ -1986,25 +1856,33 @@
       const email = emailInputLogin.value;
       const passLogin = document.getElementById('senha-login');
 
+      // Simulação simples: Se não tiver nome salvo (excluído), usa padrão.
+      let savedName = localStorage.getItem('tempUserName');
+      let savedInitials = localStorage.getItem('tempUserInitials');
+
+      const userName = savedName || (email.split('@')[0] || "Fernando Henrique de Oliveira Farias");
+      const userAvatar = (email[0] || "F").toUpperCase();
+      const userAvatarSecond = (email[1] || "H").toUpperCase();
+      const initials = savedInitials || (userAvatar + userAvatarSecond);
+
+
       if (emailInputLogin) emailInputLogin.value = '';
       if (passLogin) passLogin.value = '';
 
-      const userName = email.split('@')[0] || "Fernando Henrique de Oliveira Farias";
-      const userAvatar = (email[0] || "F").toUpperCase();
-      const userAvatarSecond = (email[1] || "H").toUpperCase();
+      updateUserDetails(userName, initials, null);
 
-      updateUserDetails(userName, userAvatar + userAvatarSecond, null);
-      resetCourse();
+      // Se a conta foi recriada do zero (resetCourse já foi chamado na exclusão),
+      // aqui apenas garantimos que o estado esteja limpo se for a primeira vez,
+      // mas como é simulação em memória, o estado reseta no reload da página ou na exclusão.
+
       showPage('dashboard');
   }
 
-  // [CORRIGIDO] Simulação de Cadastro
   function handleSignup(event) {
        if(event) event.preventDefault();
        isLoggedIn = true;
 
       const emailInputSignup = document.getElementById('email-signup');
-      // [CORRIGIDO] Pega o e-mail mesmo se for social (simulado)
       const email = (emailInputSignup && emailInputSignup.value) ? emailInputSignup.value : 'social@user.com';
       const passSignup = document.getElementById('senha-signup');
 
@@ -2016,18 +1894,43 @@
       const userAvatarSecond = (email[1] || "H").toUpperCase();
 
       updateUserDetails(userName, userAvatar + userAvatarSecond, null);
-      resetCourse();
+      resetCourse(); // Novo cadastro começa do zero
       showPage('dashboard');
   }
 
-  // [NOVO] Logout
   function handleLogout(event) {
       if(event) event.preventDefault();
       isLoggedIn = false;
-      // Limpa o nome do usuário para a simulação
       updateUserDetails("Usuário", "??", null);
       showPage('landing');
   }
+
+  // === [NOVO] Lógica de Desativar e Excluir Conta ===
+
+  function handleDeactivateAccount() {
+      // Pergunta se é isso mesmo (Sim ou Não)
+      if (confirm("Tem certeza que deseja DESATIVAR sua conta?\n\nSua conta ficará oculta e você será desconectado, mas seus dados e progresso SERÃO MANTIDOS para quando você voltar.")) {
+          alert("Conta desativada com sucesso. Faça login novamente para reativar.");
+          handleLogout(new Event('click')); // Desloga
+      }
+  }
+
+  function handleDeleteAccount() {
+      // Pergunta se é isso mesmo (Sim ou Não) - AVISO GRAVE
+      if (confirm("ATENÇÃO: Tem certeza que deseja EXCLUIR PERMANENTEMENTE sua conta?\n\nTodos os seus dados, nome, foto e progresso no curso serão APAGADOS para sempre.\n\nEsta ação não pode ser desfeita.")) {
+
+          // Simula exclusão de dados
+          localStorage.removeItem('tempUserName');
+          localStorage.removeItem('tempUserInitials');
+
+          // Reseta todo o curso (progresso, notas)
+          resetCourse();
+
+          alert("Sua conta foi excluída permanentemente.\nVocê pode criar uma nova conta com o mesmo e-mail no futuro, mas começará do zero.");
+          handleLogout(new Event('click')); // Desloga e vai para landing
+      }
+  }
+
 
   function updateUserDetails(name, initials, imageUrl) {
       const userNameElements = document.querySelectorAll('.user-info span');
@@ -2058,8 +1961,10 @@
       const file = fileInput.files[0];
 
       let currentName = document.getElementById('user-name-dash').textContent;
-
       const newName = name || currentName;
+
+      // Salva temporariamente para simular persistência durante a sessão
+      localStorage.setItem('tempUserName', newName);
 
       if (file) {
           const reader = new FileReader();
@@ -2071,7 +1976,7 @@
           reader.readAsDataURL(file);
       } else {
           const newInitials = newName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase() || "FH";
-          // Pega a URL da imagem atual, se houver
+          localStorage.setItem('tempUserInitials', newInitials);
           const currentImgSrc = document.getElementById('avatar-img-dash').src;
           const imageUrl = fileInput.files.length > 0 ? null : (currentImgSrc.includes('data:image') ? currentImgSrc : null);
           updateUserDetails(newName, newInitials, imageUrl);
@@ -2193,13 +2098,13 @@
   // === [ATUALIZADO] LÓGICA DA PROVA FINAL ===
   let quizAttempts = 0;
   const maxQuizAttempts = 3;
-  const passingScore = 6; // Precisa acertar 6 de 10 (Média 6,0)
-  let quizStatus = "pending"; // "pending", "passed", "failed_final"
+  const passingScore = 6;
+  let quizStatus = "pending";
   let lastQuizScore = 0.0;
 
-  let currentQuizQuestions = []; // A lista de 10 perguntas da tentativa atual
-  let currentQuestionIndex = 0; // Onde o aluno parou
-  let quizInProgress = false; // Salva o estado da prova
+  let currentQuizQuestions = [];
+  let currentQuestionIndex = 0;
+  let quizInProgress = false;
 
   function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -2215,11 +2120,8 @@
           return;
       }
 
-      // Só inicia uma nova prova se não houver uma em progresso
       if (!quizInProgress) {
           quizAttempts++;
-
-          // Seleciona 10 perguntas aleatórias
           currentQuizQuestions = shuffleArray([...quizDatabase]).slice(0, 10);
           currentQuestionIndex = 0;
           quizInProgress = true;
@@ -2246,7 +2148,6 @@
       const optionsContainer = document.getElementById('quiz-options-container');
       optionsContainer.innerHTML = '';
 
-      // Restaura a resposta se o aluno estiver voltando
       let savedAnswer = currentQuizQuestions[currentQuestionIndex].selected;
 
       questionData.options.forEach((option, index) => {
@@ -2275,7 +2176,6 @@
       }
 
       const answerIndex = parseInt(selectedOption.value);
-      // Salva a resposta (e se está correta) na pergunta atual
       currentQuizQuestions[currentQuestionIndex].selected = answerIndex;
 
       currentQuestionIndex++;
@@ -2283,12 +2183,10 @@
   }
 
   function showQuizResults() {
-      quizInProgress = false; // A tentativa foi finalizada
+      quizInProgress = false;
 
-      // Calcula a pontuação final
       let score = 0;
       currentQuizQuestions.forEach(q => {
-          // Compara a resposta salva (selected) com a correta
           if(q.selected === q.correct) {
               score++;
           }
@@ -2308,16 +2206,13 @@
       resultScore.textContent = `Nota: ${scoreOutOfTen.toFixed(1)} (${score} / ${total} acertos)`;
 
       if (score >= passingScore) {
-          // APROVADO
           quizStatus = "passed";
           updateQuizCard();
-          showCertificateFormPage(); // Redireciona para o formulário
+          showCertificateFormPage();
       } else {
-          // REPROVADO (nesta tentativa)
           resultsElement.style.display = 'block';
 
           if (quizAttempts < maxQuizAttempts) {
-              // Ainda tem tentativas
               quizStatus = "failed";
               resultTitle.textContent = "Tente Novamente";
               resultMessage.textContent = `Você não atingiu a média 6,0. Você ainda tem ${maxQuizAttempts - quizAttempts} tentativa(s).`;
@@ -2325,7 +2220,6 @@
               tryAgainButton.style.display = 'block';
               restartButton.style.display = 'none';
           } else {
-              // Esgotou as tentativas
               quizStatus = "failed_final";
               resultTitle.textContent = "Reprovado";
               resultMessage.textContent = `Você usou todas as suas ${maxQuizAttempts} tentativas e não atingiu a média. Para tentar novamente, você deve reiniciar o curso.`;
@@ -2368,45 +2262,28 @@
   function resetCourse(event) {
       if(event) event.preventDefault();
 
-      // 1. Resetar prova
       quizAttempts = 0;
       quizStatus = "pending";
       lastQuizScore = 0;
       quizInProgress = false;
       currentQuizQuestions = [];
 
-      // 2. Resetar UI da prova
       document.getElementById('quiz-intro').style.display = 'block';
       document.getElementById('quiz-results').style.display = 'none';
       document.getElementById('quiz-main').style.display = 'none';
       document.getElementById('quiz-attempt-status').textContent = `Você tem ${maxQuizAttempts} tentativas para atingir a média 6,0.`;
       document.getElementById('quiz-intro').querySelector('.botao-primario').style.display = 'block';
 
-      // 3. Resetar card da prova no dashboard
       updateQuizCard();
+      initializeLessonState();
+      updateGeneralProgress();
 
-      // 4. Resetar progresso geral
-      initializeLessonState(); // Reseta o objeto de progresso
-      updateGeneralProgress(); // Atualiza a UI para 0%
-
-      // 5. Voltar ao Dashboard
       showDashboard();
   }
 
   // Inicialização do Script
   initializeLessonState();
   showLandingPage();
-
-  /* [REMOVIDO] Bloco Anti-cola de tempo e cópia
-  document.addEventListener('keydown', function (e) {
-      if (quizPage.style.display === 'block' && quizMain.style.display === 'block') {
-          if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 'C' || e.key === 'U')) {
-              e.preventDefault();
-              alert("Copiar não é permitido durante a prova.");
-          }
-      }
-  });
-  */
 
 </script>
 
